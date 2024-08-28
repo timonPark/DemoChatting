@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebSocket Chat</title>
-  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/dist/stomp.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+  <!-- STOMP 라이브러리 추가 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
 <div>
@@ -23,18 +24,22 @@
   var currentRoomId = null;
 
   function connectWebSocket() {
-    var socket = new SockJS('http://localhost:8081/ws'); // 서버의 포트 8081에 연결
+    var socket = new SockJS('http://localhost:8081/ws');  // Spring Boot에서 설정한 WebSocket 엔드포인트
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function (frame) {
       console.log('Connected: ' + frame);
-    }, function (error) {
-      console.error('Connection error: ' + error);
+
+      // 서버로부터의 메시지를 받을 경로를 설정
+      stompClient.subscribe('/topic/messages', function (messageOutput) {
+        showMessage(messageOutput.body);
+      });
     });
   }
 
   function joinRoom() {
     var roomId = document.getElementById("roomId").value;
+    console.log(stompClient);
     if (!stompClient || !stompClient.connected) {
       alert("Please connect to the WebSocket server first.");
       return;
