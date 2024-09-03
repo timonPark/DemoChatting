@@ -1,7 +1,5 @@
 package me.park.chatting.demochatting.controller;
 
-com.example.jpasample.chat.adapter.in.web.dto.ChatRoomResponse;
-
 import lombok.RequiredArgsConstructor;
 import me.park.chatting.demochatting.common.response.SuccessApiResponse;
 import me.park.chatting.demochatting.service.ChatRoomCreateCommand;
@@ -10,7 +8,6 @@ import me.park.chatting.demochatting.service.ChatRoomQuery;
 import me.park.chatting.demochatting.service.ChatRoomResponse;
 import me.park.chatting.demochatting.service.in.ChatRoomCreateUseCase;
 import me.park.chatting.demochatting.service.in.ChatRoomLoadUseCase;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
