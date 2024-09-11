@@ -1,21 +1,26 @@
 package me.park.chatting.demochatting.chat.controller;
 
+import lombok.RequiredArgsConstructor;
 import me.park.chatting.demochatting.chat.dto.ChatMessage;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 
 @Controller
+@RequiredArgsConstructor
 public class ChatController {
 
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessage(ChatMessage message) {
+    final private SimpMessagingTemplate messagingTemplate;
+
+    @MessageMapping("/chatroom/{roomId}/sendMessage")
+    public void sendMessage(@DestinationVariable String roomId, ChatMessage message) {
         System.out.println("--------sendMessage--------");
         System.out.println(message);
         System.out.println("----------------------------");
-        return message;
+        messagingTemplate.convertAndSend("/topic/chatroom/" + roomId, message);
     }
 
     @MessageMapping("/chat.addUser")
